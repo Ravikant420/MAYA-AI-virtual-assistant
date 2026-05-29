@@ -1,0 +1,66 @@
+# Maya AI Assistant — Requirements
+# pip install -r requirements.txt
+
+# API
+fastapi==0.111.0
+uvicorn==0.30.1
+pydantic==2.7.1
+python-multipart==0.0.9
+
+# LLM (Ollama runs separately)
+requests==2.32.3
+google-generativeai==0.7.2
+openai==1.30.1
+
+# Embeddings + Vector Search
+sentence-transformers==3.0.1
+faiss-cpu==1.13.2
+numpy==1.26.4
+
+# Document processing
+PyMuPDF==1.24.5
+python-docx==1.1.2
+
+# System tools
+psutil==5.9.8
+
+# Voice - STT (faster-whisper replaces openai-whisper)
+faster-whisper==1.0.3
+openai-whisper @ git+https://github.com/openai/whisper.git
+SpeechRecognition==3.16.0
+sounddevice==0.4.7
+soundfile==0.12.1
+
+# Voice - TTS
+pyttsx3==2.90
+pvporcupine==4.0.2
+pvrecorder==1.2.7
+openwakeword==0.6.0
+pywhispercpp==1.4.1
+piper-tts==1.4.1
+scipy==1.15.3
+
+
+# Logging
+loguru==0.7.2
+
+# database
+aiosqlite==0.20.0
+
+# utilities
+httpx==0.27.0
+
+# if pyaudio not work then 
+# brew install portaudio
+# pip install pyaudio --break-system-packages
+
+# if openai-whisper not work then
+# pip install git+https://github.com/openai/whisper.git --break-system-packages
+
+
+# install everything with 
+# pip install -r requirements.txt --break-system-packages
+
+# pip install openwakeword pywhispercpp sounddevice soundfile numpy --break-system-packages
+# pip install piper-tts --break-system-packages
+# pip insatll scipy

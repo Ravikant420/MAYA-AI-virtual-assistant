@@ -1,0 +1,85 @@
+{
+  "name": "maya-ai-assistant",
+  "version": "1.0.0",
+  "description": "Maya \u2014 Offline AI Voice Assistant",
+  "main": "electron/main.js",
+  "author": "Ravi Kant Kumar",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:vite\" \"npm run dev:electron\"",
+    "dev:vite": "cd frontend && npm run dev",
+    "dev:electron": "wait-on http://localhost:5173 && electron .",
+    "build": "bash scripts/build-app.sh",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "bash scripts/build-backend.sh",
+    "dist:mac": "electron-builder --mac"
+  },
+  "dependencies": {
+    "electron-updater": "^6.1.7"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "wait-on": "^7.2.0"
+  },
+  "build": {
+    "appId": "com.ravi.maya",
+    "productName": "Maya",
+    "copyright": "2025 Ravi Kumar",
+    "directories": {
+      "output": "dist/app"
+    },
+    "files": [
+      "electron/**",
+      "node_modules/**",
+      "!node_modules/*/{test,tests,__tests__}"
+    ],
+    "extraResources": [
+      {
+        "from": "dist/frontend",
+        "to": "frontend"
+      },
+      {
+        "from": "dist/backend/maya-backend",
+        "to": "backend/maya-backend"
+      },
+      {
+        "from": "backend/models/porcupine",
+        "to": "models/porcupine"
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "build/icons/icon.icns",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "darkModeSupport": true,
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ]
+    },
+    "dmg": {
+      "title": "Maya ${version}",
+      "contents": [
+        {
+          "x": 150,
+          "y": 200,
+          "type": "file"
+        },
+        {
+          "x": 400,
+          "y": 200,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "afterPack": "scripts/afterpack.js"
+  }
+}

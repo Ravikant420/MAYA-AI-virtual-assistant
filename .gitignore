@@ -1,0 +1,31 @@
+# 1. Critical Secrets & Environments
+.env
+*.env
+venv/
+electron/secrets.json
+
+# 2. Node Modules
+node_modules/
+
+# 3. Python Compiled Files & App Logs
+__pycache__/
+*.py[cod]
+app.log
+logs/
+
+# 4. Production Build Artifacts
+dist/
+build/maya-backend/
+
+# 5. Runtime App Data & Local Storage 
+data/
+sandbox/
+*.db
+*.sqlite
+*.sqlite3
+
+# 6. Heavy AI Models
+*.bin
+*.onnx
+*.pt
+backend/models/

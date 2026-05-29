@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: #060A0F;
+    color: #E8EDF5;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px; /* ↑ from default 14px — better readability */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Scrollbars */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.10); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.16); }
+
+  ::selection { background: #00C8FF20; color: #E8EDF5; }
+}
+
+/* ── Color token overrides for stronger contrast ── */
+/* These supplement the Tailwind config values where we need explicit control */
+
+@layer components {
+
+  /* Glass utility */
+  .glass {
+    background: rgba(10, 14, 20, 0.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  /* Message bubble base styles */
+  .msg-user {
+    @apply bg-gradient-to-br from-pro/20 to-pro/5 border border-pro/22 text-ink-primary rounded-2xl rounded-tr-sm;
+  }
+  .msg-user-rom {
+    @apply bg-gradient-to-br from-rom/20 to-rom/5 border border-rom/22 text-ink-primary rounded-2xl rounded-tr-sm;
+  }
+  .msg-assistant {
+    @apply bg-white/[0.055] border border-white/[0.10] text-ink-primary rounded-2xl rounded-tl-sm;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    @apply flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm
+           transition-all duration-200 active:scale-95;
+  }
+
+  /* Sidebar button */
+  .sidebar-btn {
+    @apply w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
+           text-ink-secondary hover:bg-white/[0.06] hover:text-ink-primary
+           transition-all duration-150 cursor-pointer;
+  }
+}
+
+@layer utilities {
+
+  /* ── Gradient text ── */
+  .text-gradient-pro {
+    background: linear-gradient(135deg, #00C8FF, #0090FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .text-gradient-rom {
+    background: linear-gradient(135deg, #FF6B9D, #FFB0CC);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Gradient backgrounds ── */
+  .bg-gradient-pro { background: linear-gradient(135deg, rgba(0,200,255,0.14), rgba(0,144,255,0.07)); }
+  .bg-gradient-rom { background: linear-gradient(135deg, rgba(255,107,157,0.14), rgba(255,176,204,0.07)); }
+
+  /* ── Semantic border overrides (used by Tailwind config tokens) ── */
+  .border-pro { border-color: rgba(0,200,255,0.38); }
+  .border-rom { border-color: rgba(255,107,157,0.38); }
+}
+
+/* ── Markdown prose styles ── */
+/* Increased base size to 0.9375rem (15px) and improved line-height for readability */
+.prose-maya {
+  line-height: 1.75;
+  font-size: 0.9375rem;
+  color: rgba(232, 237, 245, 0.92); /* ink-primary at 92% — strong but not harsh */
+}
+.prose-maya p { margin: 0.45em 0; }
+.prose-maya p:first-child { margin-top: 0; }
+.prose-maya p:last-child  { margin-bottom: 0; }
+
+.prose-maya code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.8rem;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 5px;
+  padding: 0.1em 0.42em;
+  color: #33D4FF; /* pro blue — readable on dark */
+}
+.prose-maya pre {
+  background: rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  margin: 0.8em 0;
+}
+.prose-maya pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: rgba(232,237,245,0.88);
+  font-size: 0.8rem;
+}
+
+.prose-maya ul, .prose-maya ol { padding-left: 1.4rem; margin: 0.5em 0; }
+.prose-maya li { margin: 0.25em 0; }
+
+.prose-maya strong {
+  color: #E8EDF5;   /* full brightness for bold — ensures contrast */
+  font-weight: 600;
+}
+.prose-maya em { color: rgba(138, 155, 176, 0.85); }
+
+.prose-maya h1, .prose-maya h2, .prose-maya h3 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  color: #F0F4FA;   /* slightly brighter than body text */
+  line-height: 1.3;
+}
+.prose-maya h1 { font-size: 1.2rem;  margin: 0.9em 0 0.45em; }
+.prose-maya h2 { font-size: 1.05rem; margin: 0.75em 0 0.4em; }
+.prose-maya h3 { font-size: 0.95rem; margin: 0.65em 0 0.35em; }
+
+.prose-maya blockquote {
+  border-left: 2px solid rgba(0,200,255,0.35);
+  padding-left: 1rem;
+  color: rgba(138,155,176,0.80);
+  margin: 0.6em 0;
+  font-style: italic;
+}
+.prose-maya hr  { border-color: rgba(255,255,255,0.09); margin: 1.1em 0; }
+.prose-maya a   { color: #33D4FF; text-decoration: underline; text-decoration-color: rgba(0,200,255,0.35); }
+.prose-maya a:hover { text-decoration-color: rgba(0,200,255,0.7); }
+
+/* ── Smooth transitions globally for interactive elements ── */
+button, a, input, textarea {
+  transition-property: color, background-color, border-color, box-shadow, opacity;
+  transition-duration: 150ms;
+  transition-timing-function: ease;
+}
+
+/* ── Focus-visible ring — accessibility ── */
+:focus-visible {
+  outline: 2px solid rgba(0, 200, 255, 0.55);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Remove outline on mouse click (only show on keyboard focus) */
+:focus:not(:focus-visible) { outline: none; }
