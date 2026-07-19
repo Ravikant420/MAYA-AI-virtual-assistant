@@ -1,18 +1,10 @@
-"""
-main.py - Maya AI Assistant FastAPI Backend.
-Now supports Ollama (local), Gemini, and ChatGPT with per-model history.
-"""
-
 import os
 
-# ══════════════════════════════════════════════════════════════════════════════
-# STEP 1: ENFORCE TRUE OFFLINE MODE
-# These must be set before ANY machine learning libraries are imported.
-# This prevents sentence-transformers and HuggingFace from attempting 
-# DNS lookups and crashing the app when Wi-Fi is completely disabled.
-# ══════════════════════════════════════════════════════════════════════════════
-os.environ["TRANSFORMERS_OFFLINE"] = "1"
-os.environ["HF_DATASETS_OFFLINE"] = "1"
+CLOUD_MODE = os.getenv("CLOUD_MODE", "false").lower() == "true"
+
+if not CLOUD_MODE:
+    os.environ["TRANSFORMERS_OFFLINE"] = "1"
+    os.environ["HF_DATASETS_OFFLINE"] = "1"
 
 
 import re
@@ -79,8 +71,8 @@ class DBBundle:
         self.reminder_repo = S.reminder_repo
         self.note_repo = S.note_repo
         self.message_repo = S.message_repo
-
-
+      
+    
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("═══════════════════════════════════════")
@@ -107,13 +99,19 @@ async def lifespan(app: FastAPI):
     db_bundle = DBBundle()
     S.registry, S.executor = build_registry(db=db_bundle)
 
-    S.stt = SpeechToTextManager()
-    S.stt.pre_warm()
-    S.tts = TTSManager()
+    if not CLOUD_MODE:
+        S.stt = SpeechToTextManager()
+        S.stt.pre_warm()
+        S.tts = TTSManager()
 
     # Start wake word listener
-    init_wake_word_ws()
+        init_wake_word_ws()
+    else:
+        S.stt = None
+        S.tts = None
+        logger.info("CLOUD_MODE: voice pipeline desabled for cloud demo")
 
+  
     logger.info("Maya is ready. 🤖")
     yield
     logger.info("Maya shutting down.")
