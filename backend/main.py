@@ -36,9 +36,15 @@ from tools.executor import build_registry
 from utils.logger import setup_logger
 from utils.response_filter import filter_response, sanitize_input, is_explicit_request
 from voice.mode_manager import ModeManager
-from voice.speech_to_text import SpeechToTextManager
-from voice.text_to_speech import TTSManager
-from voice.ws_handler import websocket_endpoint, init_wake_word_ws
+try:
+    from voice.speech_to_text import SpeechToTextManager
+    from voice.text_to_speech import TTSManager
+    from voice.ws_handler import websocket_endpoint, init_wake_word_ws
+    VOICE_AVAILABLE = True
+except ImportError as e:
+    logger.warning(f"Voice stack unavailable - running without it: {e}")
+    VOICE_AVAILABLE = False
+    SpeechToTextManager = TTSManager = init_wake_word_ws = None
 
 logger = setup_logger("maya.main", config.logging.log_file, config.logging.log_level)
 
@@ -99,7 +105,7 @@ async def lifespan(app: FastAPI):
     db_bundle = DBBundle()
     S.registry, S.executor = build_registry(db=db_bundle)
 
-    if not CLOUD_MODE:
+    if VOICE_AVAILABLE and not CLOUD_MODE:
         S.stt = SpeechToTextManager()
         S.stt.pre_warm()
         S.tts = TTSManager()
@@ -143,6 +149,9 @@ async def log_requests(request: Request, call_next):
 
 @app.websocket("/ws/voice")
 async def voice_ws(websocket: WebSocket):
+    if not VOICE_AVAILABLE:
+        await websocket.close(code=1011, reason= "Voice not available in cloud demo")
+        return
     await websocket_endpoint(websocket)
 
 
