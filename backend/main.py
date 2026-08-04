@@ -132,8 +132,26 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-app.add_middleware(CORSMiddleware, allow_origins=["*"],
-                   allow_methods=["*"], allow_headers=["*"])
+# app.add_middleware(CORSMiddleware, allow_origins=["*"],
+#                    allow_methods=["*"], allow_headers=["*"])
+
+
+
+_allowed_origins_env = os.environ.get("ALLOWED_ORIGINS", "*").strip()
+_allowed_origins = (["*"] if _allowed_origins_env == "*"
+                     else [o.strip() for o in _allowed_origins_env.split(",") if o.strip()])
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=_allowed_origins,
+    allow_credentials=_allowed_origins != ["*"],  # can't combine "*" with credentials
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+
+
 
 
 @app.middleware("http")
